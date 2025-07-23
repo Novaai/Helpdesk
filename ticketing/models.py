@@ -1,3 +1,4 @@
+#using tastypie for api. try djangorestframework later for more demanding integrations
 from django.db import models
 from django.utils import timezone
 
@@ -7,8 +8,14 @@ class Ticket(models.Model):
     severity = models.IntegerField()
     ticketDesc = models.TextField(max_length = 1000)
     date_created = models.DateTimeField(default=timezone.now)
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('closed','Closed'),
+    ]
+    status = models.CharField(max_length = 10,choices=STATUS_CHOICES,default='pending')
     def __str__(self):
         return self.title
+    
 
 class FloorChoices(models.IntegerChoices):
     NOT_SELECTED = 6,'Floor Not Selected'

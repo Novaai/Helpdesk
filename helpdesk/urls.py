@@ -16,8 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from api.models import TicketResource
+from . import views
+
+ticket_resource = TicketResource()
 
 urlpatterns = [
+    path('', views.home, name='home'),
     path('admin/', admin.site.urls),
-    path('ticketing/', include('ticketing.urls'))
+    path('ticketing/', include(('ticketing.urls', 'ticketing'), namespace='ticketing')),
+    path('api/', include(ticket_resource.urls))
 ]

@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 django = "*"
+pylint-django = "*"
+django-tastypie = "*"
 
 [dev-packages]
 pylint = "*"

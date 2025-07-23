@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table table-bordered w-50">
+    <tbody>
+        <tr>
+            <th scope="row">Title</th>
+            <td>{{ ticket.title }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Client Name</th>
+            <td>{{ client.first_name }} {{ client.last_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Description</th>
+            <td>{{ ticket.ticketDesc }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

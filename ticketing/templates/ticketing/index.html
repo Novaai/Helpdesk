@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>Hello World</h1>
+
+    <!-- Table 1: All Clients with Their Tickets -->
+    <h2>All Clients</h2>
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Ticket Title</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Date Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in clients %}
+          <tr>
+            <td>{{ client.ticket.title }}</td>
+            <td>{{ client.first_name }}</td>
+            <td>{{ client.last_name }}</td>
+            <td>{{ client.ticket.date_created }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">No clients found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Table 2: Pending Tickets with Clients -->
+    <h2>Pending Tickets</h2>
+    <table class="table table-bordered table-hover">
+      <thead class="table-secondary">
+        <tr>
+          <th>Inspect Ticket</th>
+          <th>Ticket Title</th>
+          <th>Client Name(s)</th>
+          <th>Severity</th>
+          <th>Date Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in pendingTickets %}
+          {% if ticket.client_set.all %}
+            {% for client in ticket.client_set.all %}
+              <tr>
+                <!--<td><a href="/ticketing/{{ ticket.id }}" class="btn btn-outline-primary">View Details</a></td> -->
+                <td><a href="{% url 'ticketing:detail' ticket.id %}" class="btn btn-outline-primary">View Details</a></td>
+                <td>{{ ticket.title }}</td>
+                <td>{{ client.first_name }} {{ client.last_name }}</td>
+                <td>{{ ticket.severity }}</td>
+                <td>{{ ticket.date_created }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td>{{ ticket.title }}</td>
+              <td colspan="2">No clients linked to this ticket.</td>
+            </tr>
+          {% endif %}
+        {% empty %}
+          <tr>
+            <td colspan="3">No pending tickets.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

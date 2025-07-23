@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Client, Ticket
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title','ticketCategory','severity','date_created')
+    list_display = ('id', 'title','ticketCategory','severity','date_created','status')
 
 class ClientAdmin(admin.ModelAdmin):
     def client_name(self, obj):
