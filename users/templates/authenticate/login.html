@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="w-100" style="max-width: 400px;">
+    <h1 class="text-center mb-4">Login</h1>
+
+    <form action="" method="POST" novalidate>
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          type="text" 
+          class="form-control"
+          name="username" 
+          aria-describedby="usernameHelp" 
+          required
+        >
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input 
+          type="password" 
+          class="form-control"
+          name="password" 
+          required
+        >
+      </div>
+
+      {{ form.as_p }}
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-outline-primary">Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

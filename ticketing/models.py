@@ -3,9 +3,12 @@ from django.db import models
 from django.utils import timezone
 
 class Ticket(models.Model):
+    client_username = models.CharField(max_length = 255, null=True, blank=True)
     title = models.CharField(max_length = 255)
     ticketCategory = models.CharField(max_length = 255)
-    severity = models.IntegerField()
+    severity = models.IntegerField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
     ticketDesc = models.TextField(max_length = 1000)
     date_created = models.DateTimeField(default=timezone.now)
     STATUS_CHOICES = [
@@ -38,9 +41,10 @@ class DepartmentChoices(models.IntegerChoices):
 
 
 class Client(models.Model):
+    client_username = models.CharField(max_length = 255, null=True, blank=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True)
     floor = models.IntegerField(choices = FloorChoices.choices, default=FloorChoices.NOT_SELECTED)
     department = models.IntegerField(choices = DepartmentChoices.choices, default=DepartmentChoices.NOT_SELECTED)

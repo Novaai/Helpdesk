@@ -12,8 +12,24 @@
             <td>{{ client.first_name }} {{ client.last_name }}</td>
         </tr>
         <tr>
+            <th scope="row">Department</th>
+            <td>{{ client.get_department_display }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Floor</th>
+            <td>{{ client.get_floor_display }}</td>
+        </tr>
+        <tr>
             <th scope="row">Description</th>
             <td>{{ ticket.ticketDesc }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Email Address</th>
+            <td>{{ client.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone Number</th>
+            <td>{{ client.phone_number }}</td>
         </tr>
     </tbody>
 </table>

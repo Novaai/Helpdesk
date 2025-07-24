@@ -1,5 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href="{% url 'ticketing:index' %}">Tickets</a>
+  <div class="d-flex flex-column align-items-center mt-5 px-3">
+
+    {% if user.is_authenticated and user.is_superuser %}
+      <a href="{% url 'admin:index' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Admin Panel
+      </a>
+
+      <a href="{% url 'ticketing:index' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        View Tickets
+      </a>
+    {% endif %}
+
+    <a href="{% url 'ticketing:create_ticket' %}" 
+       class="btn btn-outline-primary btn-lg mb-4 text-center"
+       style="min-width: 300px; max-width: 350px; width: 100%;">
+      Create Ticket
+    </a>
+
+    <a href="{% url 'ticketing:client_tickets' %}" 
+       class="btn btn-outline-primary btn-lg text-center"
+       style="min-width: 300px; max-width: 350px; width: 100%;">
+      My Tickets
+    </a>
+  </div>
 {% endblock %}
