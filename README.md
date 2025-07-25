@@ -1,2 +1,2 @@
 # Helpdesk
-In progress helpdesk app development in Django.
+Helpdesk application developed in Django.
