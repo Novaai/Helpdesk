@@ -2,6 +2,17 @@
 from django.db import models
 from django.utils import timezone
 
+
+class Helper(models.Model):
+    helper_username = models.CharField(max_length = 255)
+    helper_fname = models.CharField(max_length = 255)
+    helper_lname = models.CharField(max_length = 255)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length = 20, blank=True)
+    def __str__(self):
+        return f"{self.helper_fname} {self.helper_lname}"
+
+
 class Ticket(models.Model):
     client_username = models.CharField(max_length = 255, null=True, blank=True)
     title = models.CharField(max_length = 255)
@@ -16,6 +27,7 @@ class Ticket(models.Model):
         ('closed','Closed'),
     ]
     status = models.CharField(max_length = 10,choices=STATUS_CHOICES,default='pending')
+    #helper_id = models.ForeignKey(Helper, on_delete=models.CASCADE)
     def __str__(self):
         return self.title
     
@@ -38,7 +50,6 @@ class DepartmentChoices(models.IntegerChoices):
     EXECUTIVE_OFFICE = 4, 'Office of the Minister'
     PROCUREMENT = 5, 'Procurement Department'
     FINANCE = 6,'Finance Department'
-
 
 class Client(models.Model):
     client_username = models.CharField(max_length = 255, null=True, blank=True)
