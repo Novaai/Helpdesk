@@ -35,6 +35,13 @@ def client_tickets(request):
     })
 
 @login_required
+@login_required
+def client_resolved_ticket(request):
+    resolved_tickets = Ticket.objects.filter(client_username=request.user.username, status='closed')
+    return render(request, 'ticketing/client_resolved_ticket.html', {'resolvedTickets': resolved_tickets})
+
+
+@login_required
 def create_ticket(request):
     if request.method == 'POST':
         form = TicketClientForm(request.POST)

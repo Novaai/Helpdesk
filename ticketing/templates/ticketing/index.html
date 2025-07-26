@@ -41,6 +41,7 @@
           <th>Client Name(s)</th>
           <th>Severity</th>
           <th>Date Submitted</th>
+          <th>Updates</th>
         </tr>
       </thead>
       <tbody>
@@ -54,6 +55,7 @@
                 <td>{{ client.first_name }} {{ client.last_name }}</td>
                 <td>{{ ticket.severity }}</td>
                 <td>{{ ticket.date_created }}</td>
+                <td>ticket.ticket_updates</td>
               </tr>
             {% endfor %}
           {% else %}

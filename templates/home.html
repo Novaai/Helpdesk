@@ -3,7 +3,7 @@
 {% block content %}
   <div class="d-flex flex-column align-items-center mt-5 px-3">
 
-    {% if user.is_authenticated and user.is_superuser %}
+    {% if is_helpdesk_admin %}
       <a href="{% url 'admin:index' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
@@ -23,10 +23,16 @@
       Create Ticket
     </a>
 
+    <a href="{% url 'ticketing:client_resolved_ticket' %}" 
+       class="btn btn-outline-primary btn-lg mb-4 text-center"
+       style="min-width: 300px; max-width: 350px; width: 100%;">
+      My Resolved Tickets
+    </a>
+
     <a href="{% url 'ticketing:client_tickets' %}" 
        class="btn btn-outline-primary btn-lg text-center"
        style="min-width: 300px; max-width: 350px; width: 100%;">
-      My Tickets
+      My Pending Tickets
     </a>
   </div>
 {% endblock %}

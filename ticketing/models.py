@@ -2,16 +2,14 @@
 from django.db import models
 from django.utils import timezone
 
-
 class Helper(models.Model):
     helper_username = models.CharField(max_length = 255)
-    helper_fname = models.CharField(max_length = 255)
-    helper_lname = models.CharField(max_length = 255)
-    email = models.EmailField()
+    helper_fname = models.CharField(max_length = 255,null=True, blank=True)
+    helper_lname = models.CharField(max_length = 255,null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     phone_number = models.CharField(max_length = 20, blank=True)
     def __str__(self):
         return f"{self.helper_fname} {self.helper_lname}"
-
 
 class Ticket(models.Model):
     client_username = models.CharField(max_length = 255, null=True, blank=True)
@@ -21,17 +19,22 @@ class Ticket(models.Model):
     email = models.EmailField(null=True, blank=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     ticketDesc = models.TextField(max_length = 1000)
+    ticket_updates = models.TextField(blank=True, null=True)
     date_created = models.DateTimeField(default=timezone.now)
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('closed','Closed'),
     ]
     status = models.CharField(max_length = 10,choices=STATUS_CHOICES,default='pending')
-    #helper_id = models.ForeignKey(Helper, on_delete=models.CASCADE)
+    assigned_to = models.ForeignKey(
+      'Helper',
+        on_delete=models.PROTECT,
+        default=1,  # ID 1 = "Unassigned"
+        related_name='tickets'
+    )
     def __str__(self):
         return self.title
     
-
 class FloorChoices(models.IntegerChoices):
     NOT_SELECTED = 6,'Floor Not Selected'
     GROUND = 0,'Ground Floor'
