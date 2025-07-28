@@ -34,7 +34,7 @@ class Ticket(models.Model):
     )
     def __str__(self):
         return self.title
-    
+
 class FloorChoices(models.IntegerChoices):
     NOT_SELECTED = 6,'Floor Not Selected'
     GROUND = 0,'Ground Floor'

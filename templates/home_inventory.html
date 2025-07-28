@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="d-flex flex-column align-items-center mt-5 px-3">
+
+    {% if is_helpdesk_admin %}
+      <a href="{% url 'admin:index' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Admin Panel
+      </a>
+
+    {% endif %}
+    
+
+    
+  </div>
+{% endblock %}

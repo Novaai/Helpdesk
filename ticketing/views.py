@@ -1,10 +1,9 @@
 from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Ticket, Client
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import TicketClientForm
-
+from .models import Ticket, Client
 @login_required
 def index(request):
     pendingTickets = Ticket.objects.filter(status='pending')
@@ -35,6 +34,9 @@ def client_tickets(request):
     })
 
 @login_required
+def home_ticketing(request):
+    return render(request, 'home_ticketing.html')
+
 @login_required
 def client_resolved_ticket(request):
     resolved_tickets = Ticket.objects.filter(client_username=request.user.username, status='closed')

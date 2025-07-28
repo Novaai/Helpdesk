@@ -3,36 +3,22 @@
 {% block content %}
   <div class="d-flex flex-column align-items-center mt-5 px-3">
 
-    {% if is_helpdesk_admin %}
       <a href="{% url 'admin:index' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
         Admin Panel
       </a>
 
-      <a href="{% url 'ticketing:index' %}" 
+      <a href="{% url 'ticketing:home_ticketing' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
-        View Tickets
+        Helpdesk
       </a>
-    {% endif %}
 
-    <a href="{% url 'ticketing:create_ticket' %}" 
-       class="btn btn-outline-primary btn-lg mb-4 text-center"
-       style="min-width: 300px; max-width: 350px; width: 100%;">
-      Create Ticket
-    </a>
-
-    <a href="{% url 'ticketing:client_resolved_ticket' %}" 
-       class="btn btn-outline-primary btn-lg mb-4 text-center"
-       style="min-width: 300px; max-width: 350px; width: 100%;">
-      My Resolved Tickets
-    </a>
-
-    <a href="{% url 'ticketing:client_tickets' %}" 
-       class="btn btn-outline-primary btn-lg text-center"
-       style="min-width: 300px; max-width: 350px; width: 100%;">
-      My Pending Tickets
-    </a>
+      <a href="{% url 'inventory:home_inventory' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Inventory Management
+      </a>
   </div>
 {% endblock %}
