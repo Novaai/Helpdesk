@@ -1,12 +1,21 @@
 from django.contrib import admin
-from .models import Client, Ticket, Helper
+from .models import Client, Ticket, Ticket_category
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.auth.models import User, Group
 
 class TicketAdmin(admin.ModelAdmin):
     
-    list_display = ('id', 'title','ticketCategory','severity','date_created','status','ticket_updates')
+    list_display = ('id', 'title','ticket_category','severity','date_created','status','ticket_updates')
     readonly_fields = ('assigned_to',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "assigned_to":
+            try:
+                helpdesk_admins_group = Group.objects.get(name="Helpdesk Admins")
+                kwargs["queryset"] = helpdesk_admins_group.user_set.all()
+            except Group.DoesNotExist:
+                kwargs["queryset"] = User.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_readonly_fields(self, request, obj=None):
         if request.user.is_superuser:
@@ -78,13 +87,10 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ['id','client_name', 'email', 'phone_number', 'department','floor', 'ticket']
     client_name.short_description = "Client name"
 
-class HelperAdmin(admin.ModelAdmin):
-    def helper_name(self, obj):
-        return str(obj)
-    list_display = ['id','helper_username', 'helper_fname', 'helper_lname', 'email','phone_number']
-    helper_name.shortdescription = "Helper name"
+class Ticket_categoryAdmin(admin.ModelAdmin):
+    list_display = ['id','ticket_category_name', 'category_description']
 
 # Register your models here.
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Ticket, TicketAdmin)
-admin.site.register(Helper, HelperAdmin)
+admin.site.register(Ticket_category, Ticket_categoryAdmin)

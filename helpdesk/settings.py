@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ticketing.apps.TicketingConfig',
     'api.apps.ApiConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'inventory.apps.InventoryConfig',
 ]
 
 MIDDLEWARE = [
