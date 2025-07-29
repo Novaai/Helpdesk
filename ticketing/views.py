@@ -4,19 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import TicketClientForm
 from .models import Ticket, Client
+
 @login_required
-def index(request):
-    pendingTickets = Ticket.objects.filter(status='pending')
-    #Client.objects.all()
-    clients = Client.objects.filter(ticket__isnull=False)
-    #output = ', '.join([t.title for t in Tickets_List])
-    #return render(request,'ticketing/index.html',{'tickets': Tickets_List})
-    return render(request,'ticketing/index.html',{'clients': clients,
-                                                  'pendingTickets':pendingTickets})
-    #output2 = ', '.join([c.first_name for c in Clients_List])
-    
-    #combined_output = f"Ticket: {output} <br> Client: {output2}"
-    #return HttpResponse(combined_output)
+def all_tickets(request):
+    tickets = Ticket.objects.all().order_by('-date_created')
+    return render(request, 'ticketing/all_tickets.html', {'tickets': tickets})
+
+
 @login_required
 def detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
