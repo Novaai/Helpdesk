@@ -2,6 +2,21 @@ from django import forms
 from .models import Ticket, Client, FloorChoices, DepartmentChoices
 from django.contrib.auth.models import User, Group
 
+class TicketUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = '__all__'  # Load all fields
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Mark all fields as readonly except severity, status, and ticket_updates
+        editable_fields = ['severity', 'status', 'ticket_updates','ticket_category']
+
+
+        for field_name, field in self.fields.items():
+            if field_name not in editable_fields:
+                field.disabled = True  # Makes field read-only
+
 class TicketClientForm(forms.Form):
     title = forms.CharField(label="Ticket Title", widget=forms.TextInput(attrs={'class': 'form-control'}))
     ticketCategory = forms.CharField(label="Ticket Category", widget=forms.TextInput(attrs={'class': 'form-control'}))

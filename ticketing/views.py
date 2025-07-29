@@ -1,23 +1,48 @@
 from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .forms import TicketClientForm
 from .models import Ticket, Client
+from .forms import TicketUpdateForm
+
+
+def is_helpdesk_admin(user):
+    return user.groups.filter(name="Helpdesk Admins").exists()
+
+@login_required
+@user_passes_test(is_helpdesk_admin)
+def edit_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+
+    if request.method == 'POST':
+        form = TicketUpdateForm(request.POST, instance=ticket)
+        if form.is_valid():
+            form.save()
+            return redirect('ticketing:detail', ticket_id=ticket.id)
+    else:
+        form = TicketUpdateForm(instance=ticket)
+
+    return render(request, 'ticketing/edit_ticket.html', {
+        'form': form,
+        'ticket': ticket
+    })
+
 
 @login_required
 def all_tickets(request):
     tickets = Ticket.objects.all().order_by('-date_created')
     return render(request, 'ticketing/all_tickets.html', {'tickets': tickets})
 
-
 @login_required
 def detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     client = Client.objects.filter(ticket=ticket).first()
+    is_helpdesk_admin = request.user.groups.filter(name="Helpdesk Admins").exists()
     return render(request, 'ticketing/detail.html', {
         'ticket': ticket,
         'client': client,
+        'is_helpdesk_admin': is_helpdesk_admin,
     })
 
 @login_required

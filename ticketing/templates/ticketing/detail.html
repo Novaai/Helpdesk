@@ -38,4 +38,11 @@
         </tr>
     </tbody>
 </table>
+
+{% if is_helpdesk_admin %}
+  <a href="{% url 'ticketing:edit_ticket' ticket.id %}" class="btn btn-warning mt-3">
+    Edit Ticket
+  </a>
+{% endif %}
+
 {% endblock %}
