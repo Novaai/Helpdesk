@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Ticket, Ticket_category
+from .models import Client, Ticket, Ticket_category, Tag
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.auth.models import User, Group
 
@@ -90,7 +90,11 @@ class ClientAdmin(admin.ModelAdmin):
 class Ticket_categoryAdmin(admin.ModelAdmin):
     list_display = ['id','ticket_category_name', 'category_description']
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['id','name']
+
 # Register your models here.
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Ticket_category, Ticket_categoryAdmin)
+admin.site.register(Tag, TagAdmin)

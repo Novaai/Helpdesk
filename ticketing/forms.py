@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ticket, Client, FloorChoices, DepartmentChoices
+from .models import Ticket, Client, FloorChoices, DepartmentChoices, Ticket_category
 from django.contrib.auth.models import User, Group
 
 class TicketUpdateForm(forms.ModelForm):
@@ -10,7 +10,7 @@ class TicketUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Mark all fields as readonly except severity, status, and ticket_updates
-        editable_fields = ['severity', 'status', 'ticket_updates','ticket_category']
+        editable_fields = ['severity', 'status', 'ticket_updates','ticket_category','tags']
 
 
         for field_name, field in self.fields.items():
@@ -19,7 +19,11 @@ class TicketUpdateForm(forms.ModelForm):
 
 class TicketClientForm(forms.Form):
     title = forms.CharField(label="Ticket Title", widget=forms.TextInput(attrs={'class': 'form-control'}))
-    ticketCategory = forms.CharField(label="Ticket Category", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ticket_category = forms.ModelChoiceField(
+    queryset=Ticket_category.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-select'}),
+    label="Ticket Category"
+)
     ticketDesc = forms.CharField(label="Ticket Description", widget=forms.Textarea(attrs={'class': 'form-control'}))
     
 #    class Meta:

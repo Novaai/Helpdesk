@@ -36,6 +36,18 @@
             <th scope="row">Updates</th>
             <td>{{ ticket.ticket_updates }}</td>
         </tr>
+        <tr>
+            <th scope="row">Tags</th>
+            <td>
+                {% if ticket.tags.exists %}
+                {% for tag in ticket.tags.all %}
+                {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% else %}
+                No tags assigned.
+                {% endif %}
+            </td>
+        </tr>
     </tbody>
 </table>
 

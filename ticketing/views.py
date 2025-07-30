@@ -70,7 +70,7 @@ def create_ticket(request):
         if form.is_valid():
             ticket = Ticket.objects.create(
             title=form.cleaned_data['title'],
-            ticketCategory=form.cleaned_data['ticketCategory'],
+            ticket_category=form.cleaned_data['ticket_category'],
             ticketDesc=form.cleaned_data['ticketDesc'],
             status='pending',
             email=request.user.email,

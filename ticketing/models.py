@@ -15,6 +15,11 @@ class Ticket_category(models.Model):
 def get_default_ticket_category():
     return 1
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    def __str__(self):
+        return self.name
+
 
 class Ticket(models.Model):
     client_username = models.CharField(max_length = 255, null=True, blank=True)
@@ -32,13 +37,8 @@ class Ticket(models.Model):
         ('closed','Closed'),
     ]
     status = models.CharField(max_length = 10,choices=STATUS_CHOICES,default='pending')
-    assigned_to = models.ForeignKey(User, on_delete=models.PROTECT)
-    #assigned_to = models.ForeignKey(
-    #  'Helper',
-    #    on_delete=models.PROTECT,
-    #    default=1,  # ID 1 = "Unassigned"
-    #    related_name='tickets'
-    #)
+    assigned_to = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     def __str__(self):
         return self.title
 
