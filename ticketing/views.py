@@ -5,7 +5,46 @@ from django.contrib import messages
 from .forms import TicketClientForm
 from .models import Ticket, Client
 from .forms import TicketUpdateForm
+from .utils.reporting import (
+    get_status_counts, get_tag_counts,
+    generate_pie_chart, generate_bar_chart_from_tags,
+    export_status_to_excel, export_tags_to_excel
+)
 
+#reporting - charts
+def dashboard_view(request):
+    timeframe = request.GET.get('timeframe', 'lifetime')
+
+    status_data = get_status_counts(timeframe)
+    tags = get_tag_counts(timeframe)
+
+    status_chart = generate_pie_chart(status_data, 'status', 'count')
+    tag_chart = generate_bar_chart_from_tags(tags)
+
+    context = {
+        'status_chart': status_chart,
+        'tag_chart': tag_chart,
+        'timeframe': timeframe,
+    }
+    return render(request, 'ticketing/dashboard.html', context)
+
+#reporting - exports
+def export_excel_view(request):
+    timeframe = request.GET.get('timeframe', 'lifetime')
+
+    status_data = get_status_counts(timeframe)
+    tags = get_tag_counts(timeframe)
+
+    status_excel = export_status_to_excel(status_data)
+    tags_excel = export_tags_to_excel(tags)
+
+    # Combine or send as separate files - for simplicity, send status stats:
+    response = HttpResponse(
+        status_excel.read(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="ticket_status_stats.xlsx"'
+    return response
 
 def is_helpdesk_admin(user):
     return user.groups.filter(name="Helpdesk Admins").exists()

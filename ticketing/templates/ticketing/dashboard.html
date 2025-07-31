@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Timeframe Selector -->
+  <form method="get" class="mb-4">
+    <div class="row align-items-center">
+      <div class="col-auto">
+        <label for="timeframe" class="form-label fw-bold">Select Timeframe:</label>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <select class="form-select" name="timeframe" onchange="this.form.submit()">
+          <option value="7d" {% if timeframe == '7d' %}selected{% endif %}>Last 7 days</option>
+          <option value="30d" {% if timeframe == '30d' %}selected{% endif %}>Last 30 days</option>
+          <option value="1y" {% if timeframe == '1y' %}selected{% endif %}>Last Year</option>
+          <option value="lifetime" {% if timeframe == 'lifetime' %}selected{% endif %}>Lifetime</option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <!-- Chart Row -->
+  <div class="row g-4">
+    <div class="col-md-6 text-center">
+      <h5 class="fw-semibold">Ticket Status Distribution</h5>
+      <img src="data:image/png;base64,{{ status_chart }}" alt="Ticket Status Pie Chart" class="img-fluid" style="max-height: 360px;">
+    </div>
+
+    <div class="col-md-6 text-center">
+      <h5 class="fw-semibold">Tickets by Tag</h5>
+      <img src="data:image/png;base64,{{ tag_chart }}" alt="Ticket Tags Bar Chart" class="img-fluid" style="max-height: 360px;">
+    </div>
+  </div>
+
+  <!-- Export Button -->
+  <div class="text-center mt-5">
+    <a href="{% url 'ticketing:export_excel' %}?timeframe={{ timeframe }}" class="btn btn-primary btn-lg">
+      ⬇ Download Excel Report
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -10,6 +10,9 @@ KEYWORDS = {
         "network_connectivity": [
         "slow", "freeze", "lag", "loading", "reconnect","network", "connection"
     ],
+        "telecommunications": [
+        "phone", "telephone", "extension", "line"
+    ],
         "technical_software": [
         "error", "crash", "bug", "issue", "freeze", "update",
         "install", "loading",  "glitch", "Word", "Excel",
@@ -52,7 +55,8 @@ KEYWORD_SYNONYMS = {
     "rest":"reset",
     "guthib":"you spelled it wrong",
     "installation":"install",
-    "repairing":"repair"
+    "repairing":"repair",
+    "lines":"line"
 }
 
 def normalize_text(text: str) -> str:

@@ -37,6 +37,10 @@
             <td>{{ ticket.ticket_updates }}</td>
         </tr>
         <tr>
+            <th scope="row">Ticket is assigned to</th>
+            <td>{{ ticket.assigned_to }}</td>
+        </tr>
+        <tr>
             <th scope="row">Tags</th>
             <td>
                 {% if ticket.tags.exists %}
