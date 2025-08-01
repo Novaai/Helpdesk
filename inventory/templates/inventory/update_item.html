@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-start" style="min-height: 85vh;">
+  <div class="card shadow w-100" style="max-width: 650px;">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Update Item</h2>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Readonly Fields -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">ID:</label>
+          <p class="form-control bg-light">{{ item.id }}</p>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Name:</label>
+          <p class="form-control bg-light">{{ item.item_name }}</p>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Allocation Status:</label>
+          <p class="form-control bg-light">{{ item.get_allocation_status_display }}</p>
+        </div>
+
+        <!-- Editable Fields -->
+        <div class="mb-3">
+          <label for="{{ form.item_type.id_for_label }}" class="form-label fw-bold">Item Type:</label>
+          {{ form.item_type }}
+          {% for error in form.item_type.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.item_description.id_for_label }}" class="form-label fw-bold">Description:</label>
+          {{ form.item_description }}
+          {% for error in form.item_description.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Allocated To:</label>
+          <select name="allocated_to" class="form-select">
+            <option value="">-- Select Staff --</option>
+            {% for staff in all_staff %}
+              <option value="{{ staff.id }}"
+                {% if allocation and allocation.staff.id == staff.id %}
+                  selected
+                {% endif %}
+              >
+                {{ staff.get_full_name|default:staff.username }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex justify-content-between mt-4">
+          <a href="{% url 'inventory:detail' item.id %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

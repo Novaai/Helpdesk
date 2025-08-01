@@ -9,10 +9,16 @@
          style="min-width: 300px; max-width: 350px; width: 100%;">
         Admin Panel
       </a>
+      <a href="{% url 'inventory:all_items' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Item Inventory
+      </a>
+
 
     {% endif %}
     
 
-    
+
   </div>
 {% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <form method="get" class="mb-4 d-flex align-items-center" style="gap: 1rem; max-width: 700px;">
+  <label for="typeFilter" class="form-label mb-0 fw-semibold">Filter by Type:</label>
+  <select name="type" id="typeFilter" class="form-select" onchange="this.form.submit()">
+    <option value="">-- All Types --</option>
+    {% for type in item_types %}
+      <option value="{{ type.id }}" {% if selected_type_id == type.id %}selected{% endif %}>{{ type.item_type_name }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="userFilter" class="form-label mb-0 fw-semibold">Filter by Allocated User:</label>
+  <select name="user" id="userFilter" class="form-select" onchange="this.form.submit()">
+    <option value="">-- All Users --</option>
+    {% for user in all_staff %}
+      <option value="{{ user.id }}" {% if selected_user_id == user.id %}selected{% endif %}>
+        {{ user.get_full_name|default:user.username }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <noscript>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </noscript>
+</form>
+
+<br>
+
+  <h1 class="mb-4">Inventory List</h1>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Item ID</th>
+        <th>Item Name</th>
+        <th>Item Description</th>
+        <th>Item Type</th>
+        <th>Allocated To</th>
+        <th>Allocation Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.item_name }}</td>
+        <td>{{ item.item_description }}</td>
+        <td>{{ item.item_type.item_type_name }}</td>
+        {% if item.allocation %}
+          <td>{{ item.allocation.staff.get_full_name|default:item.allocation.staff.username }}</td>
+          <td>{{ item.allocation.allocated_on }}</td>
+        {% else %}
+          <td><em>Unallocated</em></td>
+          <td>N/A</td>
+        {% endif %}
+        <td>
+          <a href="{% url 'inventory:detail' item.id %}" class="btn btn-sm btn-outline-primary">
+            View Details
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

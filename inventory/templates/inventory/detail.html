@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card shadow w-100" style="max-width: 750px;">
+    <div class="card-body">
+      <h2 class="card-title mb-4 text-center">Item Details</h2>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">ID:</label>
+        <div class="form-control bg-light">{{ item.id }}</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Name:</label>
+        <div class="form-control bg-light">{{ item.item_name }}</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Type:</label>
+        <div class="form-control bg-light">{{ item.item_type.item_type_name }}</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Description:</label>
+        <div class="form-control bg-light" style="white-space: pre-wrap;">
+          {{ item.item_description|default:"No description" }}
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Allocation Status:</label>
+        <div class="form-control bg-light">{{ item.get_allocation_status_display }}</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Allocated To:</label>
+        <div class="form-control bg-light">
+          {% if allocation %}
+            {{ allocation.staff.get_full_name|default:allocation.staff.username }}
+          {% else %}
+            <em>Not allocated</em>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="mt-5 text-center">
+        <a href="{% url 'inventory:update_item' item.id %}" class="btn btn-primary me-2">Update Item</a>
+        <a href="{% url 'inventory:all_items' %}" class="btn btn-secondary">Back to All Items</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
