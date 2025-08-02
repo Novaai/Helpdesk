@@ -3,6 +3,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Item, Allocation, Item_type
 from .forms import ItemUpdateForm
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.contrib import messages
+from django.utils import timezone
+from .forms import AddItemForm
 
 # Create your views here.
 @login_required
@@ -92,3 +96,35 @@ def update_item(request, item_id):
         'allocation': allocation,
         'all_staff': all_staff,
     })
+
+@login_required
+def create_item(request):
+    if request.method == 'POST':
+        form = AddItemForm(request.POST)
+        if form.is_valid():
+            allocated_to = form.cleaned_data.get('allocated_to')
+            allocation_status = 'allocated' if allocated_to else 'unallocated'
+
+            item = Item.objects.create(
+                item_name=form.cleaned_data['item_name'],
+                item_type=form.cleaned_data['item_type'],
+                item_description=form.cleaned_data['item_description'],
+                allocation_status=allocation_status
+            )
+
+            if allocated_to:
+                staff_user = get_object_or_404(User, pk=allocated_to)
+                Allocation.objects.create(
+                    item=item,
+                    staff=staff_user,
+                    allocated_on=timezone.now()
+                )
+
+            messages.success(request, "Item created successfully.")
+            return redirect('inventory:home_inventory')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = AddItemForm()
+
+    return render(request, 'inventory/add_item.html', {'form': form})
