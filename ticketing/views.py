@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -70,8 +71,24 @@ def edit_ticket(request, ticket_id):
 
 @login_required
 def all_tickets(request):
+    query = request.GET.get('q', '')
     tickets = Ticket.objects.all().order_by('-date_created')
-    return render(request, 'ticketing/all_tickets.html', {'tickets': tickets})
+
+    if query:
+        tickets = tickets.filter(
+            Q(title__icontains=query) |
+            Q(client_username__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone_number__icontains=query) |
+            Q(severity__icontains=query) |
+            Q(status__icontains=query) |
+            Q(assigned_to__username__icontains=query)
+        ).distinct()
+
+    return render(request, 'ticketing/all_tickets.html', {
+        'tickets': tickets,
+        'query': query,
+    })
 
 @login_required
 def detail(request, ticket_id):

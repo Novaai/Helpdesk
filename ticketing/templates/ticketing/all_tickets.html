@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <div class="container mt-5">
   <h1 class="mb-4">All Tickets</h1>
+
+  <form method="get" class="mb-3">
+    <div class="input-group">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Search tickets..."
+        value="{{ query|default_if_none:'' }}"
+        aria-label="Search tickets"
+      >
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
 
   <table class="table table-bordered table-hover">
     <thead class="table-light">
@@ -28,7 +41,13 @@
         <td>{{ ticket.phone_number }}</td>
         <td>{{ ticket.severity }}</td>
         <td>{{ ticket.status|capfirst }}</td>
-        <td>{{ ticket.assigned_to.username }}</td>
+        <td>
+          {% if ticket.assigned_to %}
+            {{ ticket.assigned_to.username }}
+          {% else %}
+            Unassigned
+          {% endif %}
+        </td>
         <td>{{ ticket.date_created|date:"Y-m-d H:i" }}</td>
         <td>
           <a href="{% url 'ticketing:detail' ticket.id %}" class="btn btn-sm btn-outline-primary">
