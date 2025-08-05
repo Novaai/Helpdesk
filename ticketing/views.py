@@ -91,6 +91,11 @@ def all_tickets(request):
     })
 
 @login_required
+def my_assigned_tickets(request):
+    tickets = Ticket.objects.filter(assigned_to=request.user).order_by('-date_created')
+    return render(request, 'ticketing/my_assigned_tickets.html', {'tickets': tickets})
+
+@login_required
 def detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     client = Client.objects.filter(ticket=ticket).first()

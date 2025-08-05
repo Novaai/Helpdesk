@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">My Assigned Tickets</h1>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Title</th>
+        <th>Client Username</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Severity</th>
+        <th>Status</th>
+        <th>Date Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+      <tr>
+        <td>{{ ticket.title }}</td>
+        <td>{{ ticket.client_username }}</td>
+        <td>{{ ticket.email }}</td>
+        <td>{{ ticket.phone_number }}</td>
+        <td>{{ ticket.severity }}</td>
+        <td>{{ ticket.status|capfirst }}</td>
+        <td>{{ ticket.date_created|date:"Y-m-d H:i" }}</td>
+        <td>
+          <a href="{% url 'ticketing:detail' ticket.id %}" class="btn btn-sm btn-outline-primary">
+            View
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="text-center">
+          You currently have no tickets assigned to you for resolution.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

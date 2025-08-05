@@ -28,6 +28,8 @@ urlpatterns = [
     path('<int:ticket_id>/', views.detail, name='detail'),
     # Edit/Update ticket details as Helpdesk Administrator
     path('<int:ticket_id>/edit/', views.edit_ticket, name='edit_ticket'),
+    # View my assigned tickets (As helpdesk admin)
+    path('my-assigned-tickets/', views.my_assigned_tickets, name='my_assigned_tickets'),
     # Ticket creation form
     path('ticketing/create/', views.create_ticket, name='create_ticket'),
     # Client-specific views
