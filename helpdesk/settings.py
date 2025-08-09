@@ -29,6 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+#Mail in Dev Mode --- IMPORTANT - Gotta swap in SMTP settings when live , currently only set to dev mode.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@relayoms.com'
+
+
 # Application definition
 
 INSTALLED_APPS = [

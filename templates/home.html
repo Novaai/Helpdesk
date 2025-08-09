@@ -2,12 +2,21 @@
 
 {% block content %}
   <div class="d-flex flex-column align-items-center mt-5 px-3">
-
+    {% if is_any_admin %}
       <a href="{% url 'admin:index' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
         Admin Panel
       </a>
+
+      
+      <a href="{% url 'users:send_password_reset' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Reset User Password
+      </a>
+
+    {% endif %}
 
       <a href="{% url 'ticketing:home_ticketing' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
