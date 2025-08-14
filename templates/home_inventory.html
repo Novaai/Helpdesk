@@ -3,26 +3,35 @@
 {% block content %}
   <div class="d-flex flex-column align-items-center mt-5 px-3">
 
-    {% if is_helpdesk_admin %}
+    {% if is_inventory_admin %}
       <a href="{% url 'admin:index' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
         Admin Panel
       </a>
+      <a href="{% url 'users:send_password_reset' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Reset User Password
+      </a>
+    {% endif %}
+
+    {% if is_inventory_user or is_inventory_admin %}
       <a href="{% url 'inventory:all_items' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
-        Item Inventory
+        View Item Inventory
       </a>
-
       <a href="{% url 'inventory:add_item' %}" 
-       class="btn btn-outline-primary btn-lg mb-4 text-center"
-       style="min-width: 300px; max-width: 350px; width: 100%;">
-      Add Item to Inventory
-    </a>
-
+        class="btn btn-outline-primary btn-lg mb-4 text-center"
+        style="min-width: 300px; max-width: 350px; width: 100%;">
+        Add Item to Inventory
+      </a>
     {% endif %}
-    
+
+    {% if not is_inventory_admin and not is_inventory_user %}
+      <h2>You do not have the required permissions to view this page.</h2>
+    {% endif %}
 
 
   </div>

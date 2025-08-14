@@ -6,6 +6,7 @@ from django.contrib import messages
 from .forms import TicketClientForm
 from .models import Ticket, Client
 from .forms import TicketUpdateForm
+from helpdesk.utils import group_required
 from .utils.reporting import (
     get_status_counts, get_tag_counts,
     generate_pie_chart, generate_bar_chart_from_tags,
@@ -13,6 +14,8 @@ from .utils.reporting import (
 )
 
 #reporting - charts
+@login_required
+@group_required("Helpdesk Admins")
 def dashboard_view(request):
     timeframe = request.GET.get('timeframe', 'lifetime')
 
@@ -47,11 +50,8 @@ def export_excel_view(request):
     response['Content-Disposition'] = 'attachment; filename="ticket_status_stats.xlsx"'
     return response
 
-def is_helpdesk_admin(user):
-    return user.groups.filter(name="Helpdesk Admins").exists()
-
 @login_required
-@user_passes_test(is_helpdesk_admin)
+@group_required("Helpdesk Admins")
 def edit_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
@@ -70,6 +70,7 @@ def edit_ticket(request, ticket_id):
 
 
 @login_required
+@group_required("Helpdesk Admins")
 def all_tickets(request):
     query = request.GET.get('q', '')
     tickets = Ticket.objects.all().order_by('-date_created')
@@ -91,6 +92,7 @@ def all_tickets(request):
     })
 
 @login_required
+@group_required("Helpdesk Admins")
 def my_assigned_tickets(request):
     tickets = Ticket.objects.filter(assigned_to=request.user).order_by('-date_created')
     return render(request, 'ticketing/my_assigned_tickets.html', {'tickets': tickets})

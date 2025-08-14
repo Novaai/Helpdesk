@@ -28,5 +28,6 @@ urlpatterns = [
     path('inventory/', include(('inventory.urls', 'inventory'), namespace='inventory')),
     path('api/', include(ticket_resource.urls)),
     path('users/', include('users.urls')),
-    path('users/', include('django.contrib.auth.urls'))
+    path('users/', include('django.contrib.auth.urls')),
+    path('', views.manage_user_groups, name='manage_user_groups'),
 ]

@@ -28,6 +28,14 @@
       </a>
     {% endif %}
 
+    {% if is_helpdesk_admin %}
+      <a href="{% url 'users:send_password_reset' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Reset User Password
+      </a>
+    {% endif %}
+
     <a href="{% url 'ticketing:create_ticket' %}" 
        class="btn btn-outline-primary btn-lg mb-4 text-center"
        style="min-width: 300px; max-width: 350px; width: 100%;">

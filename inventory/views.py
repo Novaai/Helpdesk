@@ -7,13 +7,15 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from .forms import AddItemForm
+from helpdesk.utils import group_required
 
-# Create your views here.
 @login_required
+@group_required("Inventory Admins", "Inventory Users")
 def home_inventory(request):
     return render(request, 'home_inventory.html')
 
 @login_required
+@group_required("Inventory Admins", "Inventory Users")
 def all_items(request):
     item_types = Item_type.objects.all().order_by('item_type_name')
     all_staff = User.objects.order_by('username')
@@ -44,6 +46,7 @@ def all_items(request):
     })
 
 @login_required
+@group_required("Inventory Admins", "Inventory Users")
 def detail(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     allocation = Allocation.objects.filter(item=item).first()
@@ -57,13 +60,8 @@ def detail(request, item_id):
         'all_staff': all_staff,
     })
 
-
-
-def is_inventory_admin(user):
-    return user.groups.filter(name="Inventory Admins").exists()
-
 @login_required
-@user_passes_test(is_inventory_admin)
+@group_required("Inventory Admins", "Inventory Users")
 def update_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     allocation = Allocation.objects.filter(item=item).first()
@@ -98,6 +96,7 @@ def update_item(request, item_id):
     })
 
 @login_required
+@group_required("Inventory Admins", "Inventory Users")
 def create_item(request):
     if request.method == 'POST':
         form = AddItemForm(request.POST)

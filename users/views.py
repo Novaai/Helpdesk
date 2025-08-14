@@ -33,6 +33,7 @@ def is_any_admin(user):
         name__in=['Helpdesk Admins', 'Inventory Admins', 'General Admins']
     ).exists() or user.is_superuser
 
+
 @user_passes_test(is_any_admin)
 def send_password_reset(request):
     if request.method == 'POST':
