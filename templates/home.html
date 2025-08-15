@@ -2,11 +2,16 @@
 
 {% block content %}
   <div class="d-flex flex-column align-items-center mt-5 px-3">
-    {% if is_any_admin %}
+    {% if is_helpesk_admin or is_inventory_admin %}
       <a href="{% url 'admin:index' %}" 
          class="btn btn-outline-primary btn-lg mb-4 text-center"
          style="min-width: 300px; max-width: 350px; width: 100%;">
         Admin Panel
+      </a>
+      <a href="{% url 'manage_user_groups' %}" 
+         class="btn btn-outline-primary btn-lg mb-4 text-center"
+         style="min-width: 300px; max-width: 350px; width: 100%;">
+        Assign User Role
       </a>
     {% endif %}
 
