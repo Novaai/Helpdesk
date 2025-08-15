@@ -1,15 +1,19 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
 from django.urls import reverse
+from .models import RoleRequest
+from helpdesk.utils import group_required
+from .forms import RegistrationForm
+from django.utils import timezone
 
 @never_cache
 def login_user(request):
@@ -69,3 +73,80 @@ def send_password_reset(request):
 
     users = User.objects.all().order_by('username')
     return render(request, 'users/send_password_reset.html', {'users': users})
+
+
+
+
+DEFAULT_ROLE_NAME = "Helpdesk Users"
+
+@never_cache
+def register_user(request):
+    # If already logged in, keep them out of /register
+    if request.user.is_authenticated:
+        if not list(messages.get_messages(request)):
+            messages.info(request, "You are already logged in.")
+        return redirect("home")
+
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            # Create user
+            user = form.save(commit=False)
+            user.email = form.cleaned_data["email"]
+            user.save()
+
+            # Ensure default group exists, then assign
+            default_group, _ = Group.objects.get_or_create(name=DEFAULT_ROLE_NAME)
+            user.groups.add(default_group)
+
+            # Optional extra role request
+            req_group = form.cleaned_data.get("requested_role")
+            note = form.cleaned_data.get("note") or ""
+            if req_group and not user.groups.filter(id=req_group.id).exists():
+                # Avoid duplicate pending requests for same user/group
+                exists = RoleRequest.objects.filter(
+                    user=user, requested_group=req_group, status="pending"
+                ).exists()
+                if not exists:
+                    RoleRequest.objects.create(
+                        user=user,
+                        requested_group=req_group,
+                        status="pending",
+                        note=note,
+                    )
+
+            messages.success(request, "Account created. You can now sign in.")
+            return redirect('users:custom_login')
+    else:
+        form = RegistrationForm()
+
+    return render(request, "register.html", {"form": form})
+
+
+
+@login_required
+@group_required("Helpdesk Admins", "Inventory Admins")
+def review_role_requests(request):
+    pending = RoleRequest.objects.select_related("user", "requested_group").filter(status="pending")
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        req_id = request.POST.get("request_id")
+        rr = get_object_or_404(RoleRequest, id=req_id, status="pending")
+
+        if action == "approve":
+            rr.user.groups.add(rr.requested_group)
+            rr.status = "approved"
+            rr.decided_at = timezone.now()
+            rr.decided_by = request.user
+            rr.save()
+            messages.success(request, f"Approved {rr.user.username} for role: {rr.requested_group.name}.")
+        elif action == "reject":
+            rr.status = "rejected"
+            rr.decided_at = timezone.now()
+            rr.decided_by = request.user
+            rr.save()
+            messages.info(request, f"Rejected request for {rr.user.username} → {rr.requested_group.name}.")
+        return redirect("users:review_role_requests")
+
+    return render(request, "review_role_requests.html", {"pending": pending})

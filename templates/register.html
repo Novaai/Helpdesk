@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 560px;">
+  <h2 class="mb-4 text-center">Create your Relay OMS account</h2>
+
+  <form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      {{ form.username }}
+      {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors }}</div>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      {{ form.email }}
+      {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}<div class="text-danger small">{{ form.password1.errors }}</div>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Confirm Password</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors }}</div>{% endif %}
+    </div>
+
+    <hr class="my-4">
+
+    <div class="mb-3">
+      <label class="form-label">Request an extra role (optional)</label>
+      {{ form.requested_role }}
+      <div class="form-text">You’ll automatically get “Helpdesk Users”. Admins will review any extra role you request.</div>
+      {% if form.requested_role.errors %}<div class="text-danger small">{{ form.requested_role.errors }}</div>{% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Message to admin (optional)</label>
+      {{ form.note }}
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+  </form>
+
+  <div class="text-center mt-3">
+    <a href="{% url 'users:custom_login' %}">Already have an account? Sign in</a>
+  </div>
+</div>
+{% endblock %}

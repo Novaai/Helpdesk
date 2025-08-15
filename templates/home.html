@@ -13,6 +13,9 @@
          style="min-width: 300px; max-width: 350px; width: 100%;">
         Assign User Role
       </a>
+    <a href="{% url 'users:review_role_requests' %}" class="btn btn-outline-primary btn-lg mb-4 text-center" style="min-width: 300px; max-width: 350px; width: 100%;">
+        Review Role Requests
+    </a>
     {% endif %}
 
       <a href="{% url 'ticketing:home_ticketing' %}" 
