@@ -51,6 +51,9 @@ def is_any_admin(user):
     ).exists() or user.is_superuser
 
 
+
+
+
 @user_passes_test(is_any_admin)
 def send_password_reset(request):
     if request.method == 'POST':
@@ -75,10 +78,42 @@ def send_password_reset(request):
     return render(request, 'users/send_password_reset.html', {'users': users})
 
 
+def send_password_reset_non_admin(request):
+    if request.method == 'POST':
+        user_email = request.POST.get('user_email', '').strip()
+
+        # Use the built-in form directly with the email string
+        form = PasswordResetForm({'email': user_email})
+        if form.is_valid():
+            form.save(
+                request=request,  # needed to build absolute URLs
+                use_https=request.is_secure(),
+                email_template_name='users/password_reset_email.html',
+                # subject_template_name='users/password_reset_subject.txt',  # optional
+                #For live # from_email='no-reply@yourdomain.com',  # optional, else DEFAULT_FROM_EMAIL
+            )
+            # Always use a neutral message
+            messages.success(
+                request,
+                "If the user is registered, a password reset link has been sent to their email address."
+            )
+            return redirect('users:custom_login')
+        else:
+            # Form invalid (bad email format, etc.) – still return neutral wording
+            messages.error(
+                request,
+                "If the user is registered, a password reset link has been sent to their email address."
+            )
+            return redirect('users:custom_login')
+
+    # GET: render simple form to submit an email address
+    return render(request, 'users/submit_reset_email.html')
+
+
+
 
 
 DEFAULT_ROLE_NAME = "Helpdesk Users"
-
 @never_cache
 def register_user(request):
     # If already logged in, keep them out of /register
